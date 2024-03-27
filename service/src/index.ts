@@ -33,6 +33,7 @@ import {
   getUsers,
   insertChat,
   insertChatUsage,
+  insertGiftCard,
   renameChatRoom,
   updateAmountMinusOne,
   updateApiKeyStatus,
@@ -76,6 +77,20 @@ app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Headers', 'authorization, Content-Type')
   res.header('Access-Control-Allow-Methods', '*')
   next()
+})
+
+// 新增：插入兑换码
+router.post("/giftcard-insert", async (req, res) => {
+  try {
+    const { code, amount, magic } = req.body as { code: string; amount: number; magic: string }
+    if (magic !== md5(code + process.env.AUTH_SECRET_KEY))
+      throw new Error('Magic is not correct.')
+    const respCode = await insertGiftCard(code, amount)
+    res.send({ code: respCode, message: 'Insert Finish', data: null })
+  }
+  catch (error) {
+    res.send({ code: -2, message: error.message, data: null })
+  }
 })
 
 router.get('/chatrooms', auth, async (req, res) => {

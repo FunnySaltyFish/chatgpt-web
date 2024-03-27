@@ -3,7 +3,7 @@ import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import dayjs from 'dayjs'
 import { md5 } from '../utils/security'
-import type { AdvancedConfig, ChatOptions, Config, GiftCard, KeyConfig, UsageResponse } from './model'
+import { AdvancedConfig, ChatOptions, Config, GiftCard, KeyConfig, UsageResponse } from './model'
 import { ChatInfo, ChatRoom, ChatUsage, Status, UserConfig, UserInfo, UserRole } from './model'
 import { getCacheConfig } from './config'
 
@@ -39,6 +39,8 @@ const keyCol = client.db(dbName).collection<KeyConfig>('key_config')
 //   "redeemed_date": { "$comment": "执行成功兑换的日期，考虑通用性选择了String类型，由new Date().toLocaleString()产生", "$type": "String" }
 // }
 const redeemCol = client.db(dbName).collection<GiftCard>('giftcards')
+// 为 cardno 设置唯一索引
+await redeemCol.createIndex({ cardno: 1 }, { unique: true })
 
 /**
  * 插入聊天信息
@@ -59,6 +61,15 @@ export async function getAmtByCardNo(redeemCardNo: string) {
 export async function updateGiftCard(redeemCardNo: string, userId: string) {
   return await redeemCol.updateOne({ cardno: redeemCardNo.trim() }
     , { $set: { redeemed: 1, redeemed_date: new Date().toLocaleString(), redeemed_by: userId } })
+}
+// 插入兑换券信息
+export async function insertGiftCard(cardno: string, amount: number, redeemed: number = 0)  {
+  try {
+    const res = await redeemCol.insertOne(new GiftCard(amount, redeemed, cardno));
+    return 50
+  } catch (e) {
+    return -1
+  }
 }
 // 使用对话后更新用户额度
 export async function updateAmountMinusOne(userId: string) {
