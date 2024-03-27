@@ -606,6 +606,7 @@ router.post('/config', rootAuth, async (req, res) => {
 router.post('/session', async (req, res) => {
   try {
     const config = await getCacheConfig()
+    console.log('config:', config)
     const hasAuth = config.siteConfig.loginEnabled || config.siteConfig.authProxyEnabled
     const authProxyEnabled = config.siteConfig.authProxyEnabled
     const allowRegister = config.siteConfig.registerEnabled
