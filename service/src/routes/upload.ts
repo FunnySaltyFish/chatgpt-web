@@ -2,15 +2,17 @@ import Router from 'express'
 import multer from 'multer'
 import { auth } from '../middleware/auth'
 
+// 加载环境变量
+
 export const router = Router()
 
 // 配置multer的存储选项
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, 'uploads/') // 确保这个文件夹存在
+    cb(null, '/var/www/html/chatgpt-web/uploads/') // 确保这个文件夹存在
   },
   filename(req, file, cb) {
-    cb(null, `${file.fieldname}-${Date.now()}`)
+    cb(null, `${file.fieldname}-${Date.now()}.${file.originalname.split('.').pop()}`)
   },
 })
 
