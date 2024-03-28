@@ -33,9 +33,8 @@ export class GiftCard {
   constructor(amount: number, redeemed: number, cardno?: string) {
     this.amount = amount
     this.redeemed = redeemed
-    if (cardno) {
+    if (cardno)
       this.cardno = cardno
-    }
   }
 }
 

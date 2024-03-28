@@ -3,8 +3,8 @@ import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import dayjs from 'dayjs'
 import { md5 } from '../utils/security'
-import { AdvancedConfig, ChatOptions, Config, GiftCard, KeyConfig, UsageResponse } from './model'
-import { ChatInfo, ChatRoom, ChatUsage, Status, UserConfig, UserInfo, UserRole } from './model'
+import type { AdvancedConfig, ChatOptions, Config, KeyConfig, UsageResponse } from './model'
+import { ChatInfo, ChatRoom, ChatUsage, GiftCard, Status, UserConfig, UserInfo, UserRole } from './model'
 import { getCacheConfig } from './config'
 
 dotenv.config()
@@ -63,11 +63,12 @@ export async function updateGiftCard(redeemCardNo: string, userId: string) {
     , { $set: { redeemed: 1, redeemed_date: new Date().toLocaleString(), redeemed_by: userId } })
 }
 // 插入兑换券信息
-export async function insertGiftCard(cardno: string, amount: number, redeemed: number = 0)  {
+export async function insertGiftCard(cardno: string, amount: number, redeemed: number = 0) {
   try {
-    const res = await redeemCol.insertOne(new GiftCard(amount, redeemed, cardno));
+    const res = await redeemCol.insertOne(new GiftCard(amount, redeemed, cardno))
     return 50
-  } catch (e) {
+  }
+  catch (e) {
     return -1
   }
 }

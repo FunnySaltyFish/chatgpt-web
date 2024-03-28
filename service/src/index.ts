@@ -80,7 +80,7 @@ app.all('*', (_, res, next) => {
 })
 
 // 新增：插入兑换码
-router.post("/giftcard-insert", async (req, res) => {
+router.post('/giftcard-insert', async (req, res) => {
   try {
     const { code, amount, magic } = req.body as { code: string; amount: number; magic: string }
     if (magic !== md5(code + process.env.AUTH_SECRET_KEY))
@@ -621,7 +621,7 @@ router.post('/config', rootAuth, async (req, res) => {
 router.post('/session', async (req, res) => {
   try {
     const config = await getCacheConfig()
-    console.log('config:', config)
+    // console.log('config:', config)
     const hasAuth = config.siteConfig.loginEnabled || config.siteConfig.authProxyEnabled
     const authProxyEnabled = config.siteConfig.authProxyEnabled
     const allowRegister = config.siteConfig.registerEnabled
