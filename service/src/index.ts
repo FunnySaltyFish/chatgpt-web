@@ -58,7 +58,7 @@ import {
 import { authLimiter, limiter } from './middleware/limiter'
 import { hasAnyRole, isEmail, isNotEmptyString } from './utils/is'
 import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
-import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
+import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5, md5Raw } from './utils/security'
 import { isAdmin, rootAuth } from './middleware/rootAuth'
 import { router as uploadRouter } from './routes/upload'
 
@@ -70,7 +70,7 @@ const router = express.Router()
 app.use(express.static('public'))
 app.use(express.json())
 
-app.use('/uploads', express.static('uploads'))
+// app.use('/uploads', express.static('uploads'))
 
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -79,17 +79,30 @@ app.all('*', (_, res, next) => {
   next()
 })
 
+// 全局错误处理中间件
+app.use((err, req, res, next) => {
+  // 将错误信息输出到日志中
+  console.error(err.stack)
+  // 或者使用你喜欢的日志库，比如winston、morgan等
+  // logger.error(err.stack);
+
+  // 返回错误信息给客户端
+  res.status(500).send(`Something broke!${err.message}`)
+})
+
 // 新增：插入兑换码
 router.post('/giftcard-insert', async (req, res) => {
   try {
     const { code, amount, magic } = req.body as { code: string; amount: number; magic: string }
-    if (magic !== md5(code + process.env.AUTH_SECRET_KEY))
+    // console.log("auth_key: ", process.env.AUTH_SECRET_KEY, "magic:", magic, "md5 res:", md5Raw(code + process.env.AUTH_SECRET_KEY))
+    if (magic !== md5Raw(code + process.env.AUTH_SECRET_KEY))
       throw new Error('Magic is not correct.')
     const respCode = await insertGiftCard(code, amount)
     res.send({ code: respCode, message: 'Insert Finish', data: null })
   }
   catch (error) {
     res.send({ code: -2, message: error.message, data: null })
+    console.error(error.stack)
   }
 })
 

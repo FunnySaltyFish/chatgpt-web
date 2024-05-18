@@ -14,7 +14,7 @@
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
-    "build-only": "vite build",
+    "build-only": "vite build --outDir /var/www/html/chatgpt-web",
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

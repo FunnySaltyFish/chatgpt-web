@@ -3,6 +3,7 @@ import * as fileType from 'file-type'
 
 // 加载环境变量
 import dotenv from 'dotenv'
+
 dotenv.config()
 
 fs.mkdir(process.env.UPLOAD_FOLDER).then(() => {

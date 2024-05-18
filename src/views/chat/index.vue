@@ -27,7 +27,7 @@ let controller = new AbortController()
 let lastChatInfo: any = {}
 
 const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
-const supportedModelNames = import.meta.env.VITE_SUPPORT_IMAGE_MODELS?.split(',') ?? ["gpt-4-vision-preview"]
+const supportedModelNames = import.meta.env.VITE_SUPPORT_IMAGE_MODELS?.split(',') ?? ['gpt-4-vision-preview']
 
 const route = useRoute()
 const dialog = useDialog()
@@ -59,17 +59,17 @@ const currentNavIndexRef = ref<number>(-1)
 
 const isVisionModel = computed(() => {
   const currentModel = currentChatModel.value
-  globalThis.console.log("currentModel", currentModel, "supportedModelNames", supportedModelNames)
-  if (!currentModel) return false
+  globalThis.console.log('currentModel', currentModel, 'supportedModelNames', supportedModelNames)
+  if (!currentModel)
+return false
   // # support image Models
   // SUPPORT_IMAGE_MODELS=gpt-4-vison-preview,gpt-4-turbo,gemini-1.5,gpt-4-all
-  
+
   return supportedModelNames.some((modelName: string) => {
     // globalThis.console.log("modelName", modelName, "currentModel", currentModel, "currentModel.includes(modelName)", currentModel.includes(modelName))
     return currentModel.includes(modelName)
   })
 })
-
 
 let loadingms: MessageReactive
 let allmsg: MessageReactive

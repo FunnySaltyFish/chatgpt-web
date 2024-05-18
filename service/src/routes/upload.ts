@@ -1,8 +1,9 @@
 import Router from 'express'
 import multer from 'multer'
-import { auth } from '../middleware/auth'
-// 加载环境变量
 import dotenv from 'dotenv'
+import { auth } from '../middleware/auth'
+
+// 加载环境变量
 dotenv.config()
 
 // 加载环境变量

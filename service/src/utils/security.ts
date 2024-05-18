@@ -11,6 +11,12 @@ export function md5(input: string) {
   return md5.digest('hex')
 }
 
+export function md5Raw(input: string) {
+  const md5 = createHash('md5')
+  md5.update(input)
+  return md5.digest('hex')
+}
+
 // 可以换 aes 等方式
 export async function getUserVerifyUrl(username: string) {
   const sign = getUserVerify(username)
